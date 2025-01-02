@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         fontFamily: "open-sans",
         fontSize: 20,
         textAlign: "center",
-        marginBottom: 24
+        marginBottom: 24KeyboardAvoidingView
     },
     highlight: {
         fontFamily: "open-sans-bold",
