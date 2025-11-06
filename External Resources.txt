@@ -1,0 +1,87 @@
+////////////////////////////////////////////////////////////////// 
+// changing app name
+//////////////////////////////////////////////////////////////////
+
+First of all: 
+	change displayName value in app.json
+		{
+    		"name": "SomethingSomething",
+    		"displayName": "My New App Name"
+		}
+For Android app: 
+	change string tag value in strings.xml file 
+		<string name="app_name">My New App Name</string>
+For iOS: 
+	replace the value after <key>CFBundleDisplayName</key> in info.plist
+		<key>CFBundleDisplayName</key>
+		<string>My New App Name</string>
+
+-then rebuild the application
+واللغة العربية
+////////////////////////////////////////////////////////////////// 
+// changing app icon
+//////////////////////////////////////////////////////////////////
+
+- you can generate icon if you don't have
+https://icon.kitchen/i/H4sIAAAAAAAAA6tWKkvMKU0tVrKqVkpJLMoOyUjNTVWySkvMKU6t1VHKzU8pzQHJRisl5qUU5WemKOkoZeYXA8ny1CSl2FoApT8%2BHkAAAAA%3D
+
+- upload the app icon on 
+	https://makeappicon.com/
+- download icons
+// for android
+- open android folder and copy all minmap folders
+- paste them and replace folders in >>>> YourProject -> android -> app -> src -> main -> res
+// for IOS
+- open ios -> AppIcon.appiconset, then copy all the files
+- paste them and replace folders in >>>> YourProject -> ios -> YourProject -> Images.xcassets -> AppIcon.appiconset
+
+-then rebuild the application
+
+////////////////////////////////////////////////////////////////// 
+// splash screen
+//////////////////////////////////////////////////////////////////
+- follow instructions from the following link
+https://www.npmjs.com/package/react-native-splash-screen
+
+- or better follow this video
+https://www.youtube.com/watch?v=_hgsAlPTGXY&ab_channel=CodeWithAbdul
+
+- and use the following tool to generate splash picture
+https://apetools.webprofusion.com/#/tools/imagegorilla
+
+////////////////////////////////////////////////////////////////// 
+// native wind (nativeWind)
+//////////////////////////////////////////////////////////////////
+
+https://www.nativewind.dev/quick-starts/react-native-cli
+
+////////////////////////////////////////////////////////////////// 
+// CHARTS
+//////////////////////////////////////////////////////////////////
+
+// don't forget to restart the server after installation
+
+-react-native-responsive-linechart
+https://www.npmjs.com/package/react-native-responsive-linechart
+
+----------------------------------------
+
+-react-native-gifted-charts
+https://www.npmjs.com/package/react-native-gifted-charts
+
+الملخص
+#npm i react-native-gifted-charts
+https://gifted-charts.web.app/areachart
+https://gifted-charts.web.app/areachart/#customDataPoints
+
+----------------------------------------
+
+-victory-candlestick
+https://commerce.nearform.com/open-source/victory/docs/native
+https://commerce.nearform.com/open-source/victory/docs/victory-candlestick/
+
+الملخص
+#npm install --save victory-native@legacy
+https://commerce.nearform.com/open-source/victory/docs
+
+----------------------------------------

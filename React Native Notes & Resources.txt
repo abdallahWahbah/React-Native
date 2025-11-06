@@ -1,0 +1,635 @@
+Course link:
+https://www.udemy.com/course/react-native-the-practical-guide/
+
+Download link:
+https://freecoursesite.com/react-native-the-practical-guide-21/
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 1, 2
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//**//**//**//**// lecture 7: how to create app
+# npx create-expo-app appName
+
+
+//**//**//**//**// lecture 8: how to run the application on your phone
+- download expo go application from play store
+- open cmd in the project folder and write
+# npm start
+- it will give you a QR code, scan it with expo go app
+--------------------------------------------
+// flex-box is by default enabled to <View> component .... use flexDirection directly .... the default value for flexDirection is column
+--------------------------------------------
+// Text in ios phone doesn't support borderRadius, so you can wrap it with a View parent
+--------------------------------------------
+// (no style inheritance in React native) child elments don't inherit css properties from parent elements such as color....
+--------------------------------------------
+// FlatList is better than ScrollView 
+	- ScrollView renders all the items even if they are not visible on the screen (99th item of 1000)
+
+	- FlatList: all the items that are off the screen will only be loaded and rendered lazily as they are needed when the user scrolls
+
+// 2 ways for adding key in the FlatList
+ 	- when adding new item to the state, save it as an object and add a key property to it, it will be added automatically
+	- keyExtractor: if you added id to the item, you can extract a key for it
+
+
+<FlatList
+                    data={guessRounds}
+                    renderItem={(itemData) => <GuessLogItem roundNumber={guessRounds.length - itemData.index} guess={itemData.item}/>}
+                    keyExtractor={(item) => item}
+		    numColumns={2}	
+                />
+--------------------------------------------
+// <Button> doesn't have style property
+
+
+// some styling when you press the button
+	    <Pressable 
+                onPress={() => handleDelete(props.itemData.item.id)}
+                android_ripple={{color: "#210644"}}    // styling when we click for android 
+                style={({pressed}) => pressed && styles.pressedItem}   // styling when we click for ios 
+            >
+
+// if the image is in the files of the project
+<Image source={require("path....")}/> 
+// if the image source is a link >>>> you need to style height and width for it(mandatory)
+<Image source={{uri: "https/ww,gi;kaksjdlkasjd"}}/>
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 3, 4: FlatList-Pressable-boxShadow-LinearGradient-Alert-SafeAreaView-icons-fonts
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// video #50: box-shadow
+- box-shadow differs from android to ios
+
+	- android >>> elevation: 4
+
+	- ios >>> 	shadowColor: "red"
+			shadowOffset: {width: 0, height: 2} // no shadow on left and right, shadow in positive y axis (down) by 2px
+			shadowRadius: 6 // how much should the shadow spread 
+			shadowOpacity: .25 // how transparent the shadow is
+
+// if the shadow for ios didn't work, use also backgroundColor with them (shadow preperties)
+// in any place, you can pass an array to style >>>> <Text style={[styles.oldStyle, styles.newStyle]} ></Text
+
+--------------------------------------------
+
+// video #56: linear gradiend >>>  https://docs.expo.dev/versions/latest/sdk/linear-gradient/
+
+#npx expo install expo-linear-gradient
+import { LinearGradient } from "expo-linear-gradient";
+<LinearGradient colors={["#4e0329", "#ddb52f"]}>
+      <Text></Text>
+    </LinearGradient>
+
+--------------------------------------------
+
+// video #59: alert
+
+Alert.alert(
+                "Invalid Number", // title
+                "Number has to be a number between 1 and 99", // message
+                [{ text: "Okay", style: "destructive", onPress: resetInputHandler }] // array of buttons
+            );
+
+--------------------------------------------
+
+// video #62: SafeAreaView >>>> to add some margin to the top if the phone has a ((notch))
+--------------------------------------------
+// video #70: icons >>>> https://icons.expo.fyi/Index
+
+import { Ionicons } from '@expo/vector-icons';
+<Ionicons name="remove" size={24} color="black" />
+--------------------------------------------
+// video #71: custom fonts, loading splash >>>> https://docs.expo.dev/versions/latest/sdk/font/
+
+# npx expo install expo-font
+
+// in the app component
+import { useFonts } from 'expo-font';
+const [fontsLoaded] = useFonts({
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"), // the key is the name that we will use to call this font, the value is the path to the font 
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+  })
+
+
+// in the app component
+# npm install expo-app-loading
+
+import AppLoading from 'expo-app-loading';
+if(!fontsLoaded) return <AppLoading />
+
+
+// in the Title, InstructionText component >>> in StyleSheet
+
+        fontFamily: "open-sans-bold"
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 5: Dimensions, Layouts, Styling
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// video #82, 83: Dimension >>> for different screen sizes
+
+import { Dimensions } from "react-native";
+const screenWidth = Dimensions.get("window").width; // after the export default of the function line
+// for styling
+padding: screenWidth < 380 ? 12 : 24,
+
+// screen vs window
+	- ios: no difference
+	- android: screen is the entire available width, height including the status bar >>> window is exluding the status bar
+--------------------------------------------
+// video #84: enabling orientation (portrait and landscape)
+- open App.json >>>> change the ("orientation": "portrait") to ("orientation": "default")
+--------------------------------------------
+// video #85: dynamic dimensions (useWindowDimensions) >>>> to deal with orientation change >>> cause if you used Dimensions, it will be executed once >>> this hook is excuted every time the component is rerendered
+import { useWindowDimensions } from "react-native";
+
+    const { width, height } = useWindowDimensions();
+
+    const marginTopDistance = height < 380 ? 30 : 100;
+
+<View style={[styles.rootContainer, {marginTop: marginTopDistance}]}></View>
+
+if(width > 500) reutrn <View><Text>Sorry</Text></View>
+--------------------------------------------
+// video #86: KeyboardAvoidingView >>> 
+	- component which you can use to wrap other content that contain input field with it
+	- and when the keyboard open up, the content will move up so that you can access it 
+	- mostly, you will need to wrap it will ScrollView
+	- this case is for ios 
+
+import { KeyboardAvoidingView, ScrollView } from "react-native";
+<ScrollView style={styles.screen}> >>>>>>>>>>>>>>>> style is (flex: 1), and below also
+	<KeyboardAvoidingView style={styles.screen} behavior="position">
+		<TextInput />
+	</KeyboardAvoidingView>
+</ScrollView>
+--------------------------------------------
+// video #89: Platform
+
+import { Platform } from "react-native"
+        borderWidth: Platform.OS === "android" ?  2: 0,
+// another way
+        borderWidth: Platform.select({ios: 0, android: 2}),
+--------------------------------------------
+// video #90: StatusBar
+
+import { StatusBar as StatusBarLight } from 'expo-status-bar'; 
+// changed the name cause it may conflict with import { StatusBar } from 'react-native' >>>  for styling >>> paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+
+      <StatusBarLight style="light"/> {/**light-dark */}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 6: Navigation
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// change all pages background >>> open App.json >>> add "backgroundColor": "#24180f", then reload the application
+--------------------------------------------
+// video #95, 102: Routing >>> https://reactnavigation.org/docs/getting-started/  >>>>>>>>>> https://reactnavigation.org/docs/native-stack-navigator
+
+// Stack Navigator
+
+# npm install @react-navigation/native
+# npx expo install react-native-screens react-native-safe-area-context
+# npm install @react-navigation/native-stack
+
+// it has a default wrapper that acts like SafeAreaView
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
+
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{ // default screen options that will be applied to all screens in the navigator
+            headerStyle: {backgroundColor: "#351401"},
+            headerTintColor: "white", // color of the (title, back button and back button text)
+            contentStyle: {backgroundColor: "#3f2f25"} // background for the page not the header
+          }}
+        >
+          <Stack.Screen 
+            name="MealsCategories" 
+            component={CategoriesScreen}
+            options={{
+              title: "All Categories", // header title
+            }}  
+          />
+          <Stack.Screen 
+            name="MealsOverview" 
+            component={MealsOverviewScreen}
+            // options={({route, navigation}) => { // dynamic header naming
+            //   const catId = route.params.categoryId
+            //   return { // return the same options object just like the screen above 
+            //     title: catId
+            //   }
+            // }}
+            // there is another easy way in the MealsOverviewScreen component
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+
+// navigation & route are special props for Navigation Screens (components (props))
+
+navigation.navigate("MealsOverview", {categoryId: itemData.item.id}) // the second parameter is the data to pass to the MealsOveriew (optional)
+navigation.goBack();
+navigation.replace("Signup"); // the same as .navigate but it will not have back button
+
+// if the component is not a navigation screen
+import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+const navigation = useNavigation()
+// const route = useRoute();
+
+
+
+// to receive data in the Navigator Screen 
+// the Navigator Screen receive route prop
+    const catId = route.params.categoryId;
+
+
+    // changing navigation header title dynamically
+    useLayoutEffect(()=> // the same as useEffect >>> but it executes the code inside of it before (not after) the component has been rendered
+    {
+        const categoryTitle = CATEGORIES.find(cat => cat.id === catId).title;
+    
+        navigation.setOptions({
+            title: categoryTitle
+        })
+    }, [catId])
+
+--------------------------------------------
+
+// if the image is in the files of the project
+<Image source={require("path....")}/> 
+// if the image source is a link >>>> you need to style height and width for it(mandatory)
+<Image source={{uri: "https/ww,gi;kaksjdlkasjd"}}/>
+--------------------------------------------
+// if the content is bigger than the height of the phone and scroll is not working, wrap the items with <ScrollView></ScrollView>
+--------------------------------------------
+// video #107: adding header button (or any component or jsx element)
+
+          <Stack.Screen
+            name="MealDetail"
+            component={MealDetailScreen}
+            options={{
+              // headerRight={AnyComponent}
+              headerRight: () => {
+                return (<Text>In the header</Text>)
+              }
+            }}
+
+// easier way (dynamically)
+const headerButtonPressHandler = () =>
+    {
+        console.log("first")
+    }
+    
+    useLayoutEffect(()=> // the same as useEffect >>> but it executes the code inside of it before (not after) the component has been rendered
+    {
+        navigation.setOptions({
+            headerRight: () => {
+                return (<Button title="Tap me!" onPress={headerButtonPressHandler}/>)
+            }
+        })
+    }, [])
+--------------------------------------------
+// video #109: Drawer Navigator >>>> https://reactnavigation.org/docs/drawer-navigator
+
+# npm install @react-navigation/native
+# npm install @react-navigation/drawer
+# npx expo install react-native-gesture-handler react-native-reanimated
+
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+  const Drawer = createDrawerNavigator();
+<NavigationContainer>
+      <Drawer.Navigator
+        screenOptions={{
+          headerStyle: {backgroundColor: "#3c0a6b"},
+          headerTintColor: "white",
+          drawerActiveBackgroundColor: "#f0e1ff",
+          drawerActiveTintColor: "#3c0a6b",
+        }}
+      >
+        <Drawer.Screen 
+          options={{
+            drawerLabel: "Welcome Screen",
+            drawerIcon: ({color, size}) => (
+              <Ionicons name="home" size={size} color={color}/>
+            )
+          }}
+          name='Welcome' 
+          component={WelcomeScreen} 
+        />
+        <Drawer.Screen 
+          name="User" 
+          component={UserScreen} 
+          options={{
+            // drawerLabel: "New User Screen",
+            drawerIcon: ({color, size}) => (
+              <Ionicons name="person" size={size} color={color}/>
+            )
+          }}  
+        />
+      </Drawer.Navigator>
+    </NavigationContainer>
+
+// open the drawer navigation dynamically
+navigation.toggleDrawer();
+--------------------------------------------
+// video #111: bottom-tabs Navigator >>> https://reactnavigation.org/docs/bottom-tab-navigator
+
+# npm install @react-navigation/native
+# npm install @react-navigation/bottom-tabs
+
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+  const BottomTap = createBottomTabNavigator();
+
+<NavigationContainer>
+      <BottomTap.Navigator
+        screenOptions={{
+          headerStyle: {backgroundColor: "#3c0a6b"},
+          headerTintColor: "white",
+          tabBarActiveTintColor: "#3c0a6b"
+        }}
+      >
+        <BottomTap.Screen 
+          name='Welcome' 
+          component={WelcomeScreen} 
+          options={{
+            tabBarIcon: ({color, size, }) => (
+              <Ionicons name="home" color={color} size={size}/>
+            )
+          }}
+        />
+        <BottomTap.Screen 
+          name="User" 
+          component={UserScreen} 
+          options={{
+            tabBarIcon: ({color, size}) => (
+              <Ionicons name="person" color={color} size={size}/>
+            )
+          }}  
+        />
+      </BottomTap.Navigator>
+    </NavigationContainer>
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 7: context, redux
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// context is used in >>> store/context/favorites-context, App.js by wrapping the whole app with the provider, MealDetailScreen, FavoritesScreen 
+--------------------------------------------
+// redux
+
+#npm install @reduxjs/toolkit react-redux
+
+// the same files and folders for redux
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 8, 9, 10: Expenses app practise (context, http)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Loading spinner
+
+import { ActivityIndicator } from "react-native";
+            <ActivityIndicator size="large" color="white"/>
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 11: Authentication
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+https://firebase.google.com/docs/reference/rest/auth  
+
+// to get API_KEY >>> open the firebase project, press on settings icon, project settings
+
+// video #186: Async storage (like localStorage in the broweser)
+
+# npx expo install @react-native-async-storage/async-storage
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+AsyncStorage.setItem("token", token)
+useEffect(()=>
+    {
+        const fetchToken = async () =>
+        {
+            const fetchedToken = await AsyncStorage.getItem("token");
+            if(fetchToken) setAuthToken(fetchedToken);
+        }
+
+        fetchToken();
+    }, [])
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 12: Camera, Location, sqlite
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// video #196 to #199: camera >>> https://docs.expo.dev/versions/latest/sdk/camera/
+
+# npx expo install expo-image-picker
+
+- add the code below to app.json (important to see the documentation)
+
+"plugins": [
+      [ "cameraPermission", "photosPermission", "microphonePermission" 
+        "expo-image-picker",
+        {
+          "cameraPermission": "The app needs acces to your camera to share your favorite place."
+        }
+      ]
+    ]
+
+import { launchCameraAsync, useCameraPermissions, PermissionStatus } from "expo-image-picker";
+
+const [pickedImage, setPickedImage] = useState();
+    const [cameraPermissionInformation, requestPermission] = useCameraPermissions();
+
+    const verifyPermission = async () => // to give permission dialog for IOS phones, cause it doesn't open automatically like android heroes
+    {   
+        if(cameraPermissionInformation.status === PermissionStatus.UNDETERMINED)// we don't know if we have permission or not
+        {
+            const permissionResponse = await requestPermission();
+            return permissionResponse.granted; // true if the permission is granted, else otherwise
+        }
+        if(cameraPermissionInformation.status === PermissionStatus.DENIED)
+        {
+            Alert.alert("Insufficient Permission", "You need to give camera permissions to use this app");
+            return false;
+        }
+
+        return true; // if the permission is not UNDEFIENED or DENIED >>> then we have acces to it, so return true
+    }
+
+    const takeImageHandler = async () =>
+    {
+        const hasPermission = await verifyPermission();
+        if(!hasPermission) return;
+
+        // only this code for android
+        const image = await launchCameraAsync({
+            allowsEditing: true,
+            aspect: [16, 9],
+            quality: .5
+        });
+        // console.log(image)
+
+        setPickedImage(image.assets[0].uri)
+    }
+
+            <Button title="Take Image" onPress={takeImageHandler}/>
+
+--------------------------------------------
+
+// video #202: Location >>> https://github.com/react-native-maps/react-native-maps/blob/master/docs/mapview.md
+
+# npx expo install react-native-maps
+
+// open LocationPicker, Map components to read the code
+
+// video #214: SQLITE >>> https://docs.expo.dev/versions/latest/sdk/sqlite/
+
+# npx expo install expo-sqlite
+
+// open util/database read the code
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 13: Apps without Expo (React Native CLI)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------
+
+// video #228: managed flow (expo go ) to bare workflow
+// if you work on a managed flow (using expo go) and now you wanna change to bare workflow
+- open terminal
+# expo eject >>> name the package >> >reversed url ex: com.wahbah
+- now you can run the application using >>>> npm run android
+
+--------------------------------------------
+
+// video #229: installing react native cli
+
+
+// first time (only) installation
+https://reactnative.dev/docs/environment-setup
+- open powershell (search on it in the window) by running it as administrator
+- copy and paste the cli code in the link above >>>> 
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+-if you got error, try installing the last version of java jdk, then restart the laptop
+
+// to make a new project
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+(nearly this is the correct one)
+https://github.com/react-native-community/cli?tab=readme-ov-file#documentation
+# npx @react-native-community/cli@latest init MyApp
+// if not working
+# cd android
+# ./gradlew clean --stacktrace
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+https://reactnative.dev/docs/environment-setup
+# npx react-native@latest init AwesomeProject
+# npm run android
+
+
+if the react native app didn't work properly, follow these instructions
+https://docs.expo.dev/bare/installing-expo-modules/#extend-expometro-config-in-your-metroconfigjs
+
+--------------------------------------------
+
+// video #230: ReactNativeCLI with expo features
+// if you wanted to use expo location for example, it is not allowed to use in cli, so we use bare workflow >>> 
+https://docs.expo.dev/bare/installing-expo-modules/
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 14: publishing React Native Apps
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// video #237, #238: building expo app
+https://docs.expo.dev/build/setup/#a-react-native-android-andor-ios-project
+https://expo.dev/accounts/abdowahbah
+
+// video #241: Android with expo (cli)
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Section 15: Notifications
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// video #245: local notifications
+https://docs.expo.dev/versions/latest/sdk/notifications/
+// the next line is for local and push notifications
+# npx expo install expo-notifications
+
+// optional >>> app.json file:
+
+{
+  "expo": {
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./local/assets/notification-sound.wav",
+            "./local/assets/notification-sound-other.wav"
+          ]
+        }
+      ]
+    ]
+  }
+}
+
+--------------------------------------------
+
+// video #247: 
+
+- a complete list (+ explanations) of content properties
+https://docs.expo.dev/versions/latest/sdk/notifications/#notificationcontentinput
+
+- a complete list (+ explanations) of trigger properties
+https://docs.expo.dev/versions/latest/sdk/notifications/#notificationtriggerinput
+
+- set a daily time at which the notification will be sent (Android-only):
+https://docs.expo.dev/versions/latest/sdk/notifications/#dailynotificationtrigger
+
+-Or a weekly trigger (Android-only):
+https://docs.expo.dev/versions/latest/sdk/notifications/#weeklynotificationtrigger
+
+-Or a yearly trigger (Android-only): 
+https://docs.expo.dev/versions/latest/sdk/notifications/#yearlynotificationtrigger
+
+-Or a specific date (iOS-only): 
+https://docs.expo.dev/versions/latest/sdk/notifications/#calendarnotificationtrigger
+
+--------------------------------------------
+
+// video #253: push notification
+https://docs.expo.dev/push-notifications/overview/
+
+--------------------------------------------
+
+--------------------------------------------
+
+
+
+
+
